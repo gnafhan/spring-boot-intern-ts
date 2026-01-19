@@ -68,12 +68,12 @@ services:
       # Service
       - "traefik.http.services.student-backend.loadbalancer.server.port=8080"
       
-      # Middleware (optional)
+      # Middleware (optional) - CORS headers
       - "traefik.http.routers.student-backend.middlewares=student-backend-headers"
-      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
-      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolalloworigin=*"
-      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.student-backend-headers.headers.addvaryheader=true"
+      - "traefik.http.middlewares.student-backend-headers.headers.accessControlAllowMethods=GET,POST,PUT,DELETE,OPTIONS"
+      - "traefik.http.middlewares.student-backend-headers.headers.accessControlAllowOriginList=*"
+      - "traefik.http.middlewares.student-backend-headers.headers.accessControlMaxAge=100"
+      - "traefik.http.middlewares.student-backend-headers.headers.addVaryHeader=true"
 
   # React Frontend
   frontend:

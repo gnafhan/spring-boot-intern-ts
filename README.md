@@ -1,26 +1,26 @@
 # Student Management System - Full Stack Application
 
-Sistem manajemen mahasiswa lengkap dengan backend REST API (Spring Boot) dan frontend SPA (React + TypeScript).
+Complete student management system with backend REST API (Spring Boot) and frontend SPA (React + TypeScript).
 
-## 📋 Daftar Isi
+## 📋 Table of Contents
 
-- [Fitur](#fitur)
-- [Teknologi](#teknologi)
-- [Prasyarat](#prasyarat)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Development](#development)
 - [Production Deployment](#production-deployment)
-- [Struktur Project](#struktur-project)
+- [Project Structure](#project-structure)
 - [API Documentation](#api-documentation)
 
-## ✨ Fitur
+## ✨ Features
 
 ### Backend (Spring Boot)
-- ✅ RESTful API dengan N-tier architecture
-- ✅ CRUD operations untuk data mahasiswa
-- ✅ Pagination, sorting, dan search
+- ✅ RESTful API with N-tier architecture
+- ✅ CRUD operations for student data
+- ✅ Pagination, sorting, and search
 - ✅ Auto-generated student ID (Nomor Induk Mahasiswa)
-- ✅ Validasi komprehensif (usia 17-40 tahun, format nama, dll)
+- ✅ Comprehensive validation (age 17-40, name format, etc.)
 - ✅ Global exception handling
 - ✅ PostgreSQL database
 - ✅ Docker support
@@ -28,9 +28,9 @@ Sistem manajemen mahasiswa lengkap dengan backend REST API (Spring Boot) dan fro
 
 ### Frontend (React + TypeScript)
 - ✅ Single Page Application (SPA)
-- ✅ Modern UI dengan Tailwind CSS & shadcn/ui
+- ✅ Modern UI with Tailwind CSS & shadcn/ui
 - ✅ Form validation (client & server)
-- ✅ Real-time search dengan debouncing
+- ✅ Real-time search with debouncing
 - ✅ Pagination controls
 - ✅ Loading states & error handling
 - ✅ Toast notifications
@@ -38,7 +38,7 @@ Sistem manajemen mahasiswa lengkap dengan backend REST API (Spring Boot) dan fro
 - ✅ Responsive design (mobile-friendly)
 - ✅ Dark mode support
 
-## 🛠 Teknologi
+## 🛠 Technologies
 
 ### Backend
 - Java 21
@@ -59,39 +59,39 @@ Sistem manajemen mahasiswa lengkap dengan backend REST API (Spring Boot) dan fro
 - shadcn/ui
 - date-fns
 
-## 📦 Prasyarat
+## 📦 Prerequisites
 
-- **Docker Desktop** (recommended) atau
-- **Node.js 18+** dan **JDK 21** (untuk development lokal)
+- **Docker Desktop** (recommended) or
+- **Node.js 18+** and **JDK 21** (for local development)
 
 ## 🚀 Quick Start
 
 ### Option 1: Docker Compose (Recommended)
 
-Jalankan seluruh aplikasi (backend + frontend + database) dengan satu perintah:
+Run the entire application (backend + frontend + database) with one command:
 
 ```bash
-# Di root project
+# In root project directory
 docker-compose up -d --build
 ```
 
-Aplikasi akan tersedia di:
+Application will be available at:
 - **Frontend**: http://localhost:6173
 - **Backend API**: http://localhost:8712/api
 - **Database**: localhost:5432
 
-Untuk stop aplikasi:
+To stop the application:
 ```bash
 docker-compose down
 ```
 
-### Option 2: Development Manual
+### Option 2: Manual Development Setup
 
 #### 1. Start Backend
 ```bash
 cd intern-project-be
 docker-compose up -d --build
-# Backend akan running di http://localhost:8712
+# Backend will run at http://localhost:8712
 ```
 
 #### 2. Start Frontend
@@ -99,7 +99,7 @@ docker-compose up -d --build
 cd intern-project-fe
 npm install
 npm run dev
-# Frontend akan running di http://localhost:5173
+# Frontend will run at http://localhost:5173
 ```
 
 ## 💻 Development
@@ -109,10 +109,10 @@ npm run dev
 ```bash
 cd intern-project-be
 
-# Start dengan Docker
+# Start with Docker
 docker-compose up -d
 
-# Atau tanpa Docker (perlu PostgreSQL running)
+# Or without Docker (requires PostgreSQL running)
 ./mvnw spring-boot:run
 
 # Build
@@ -122,7 +122,7 @@ docker-compose up -d
 ./mvnw test
 ```
 
-**Dokumentasi lengkap**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
+**Complete documentation**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
 
 ### Frontend Development
 
@@ -135,7 +135,7 @@ npm install
 # Development server
 npm run dev
 
-# Build production
+# Build for production
 npm run build
 
 # Preview production build
@@ -145,26 +145,26 @@ npm run preview
 npm run lint
 ```
 
-**Dokumentasi lengkap**: [intern-project-fe/README.md](intern-project-fe/README.md)
+**Complete documentation**: [intern-project-fe/README.md](intern-project-fe/README.md)
 
 ## 🚢 Production Deployment
 
-### Menggunakan Docker Compose
+### Using Docker Compose
 
-1. **Build dan run semua services**:
+1. **Build and run all services**:
 ```bash
 docker-compose up -d --build
 ```
 
 2. **Check logs**:
 ```bash
-# Semua services
+# All services
 docker-compose logs -f
 
-# Backend saja
+# Backend only
 docker-compose logs -f backend
 
-# Frontend saja
+# Frontend only
 docker-compose logs -f frontend
 ```
 
@@ -172,13 +172,13 @@ docker-compose logs -f frontend
 ```bash
 docker-compose down
 
-# Dengan menghapus volumes (database akan di-reset)
+# With removing volumes (database will be reset)
 docker-compose down -v
 ```
 
 ### Environment Variables
 
-Buat file `.env` di root project (opsional):
+Create a `.env` file in the root project (optional):
 
 ```env
 # Backend
@@ -189,14 +189,14 @@ DB_USER=internuser
 DB_PASSWORD=internpass
 
 # Frontend
-VITE_API_BASE_URL=http://localhost:8080/api
+VITE_API_BASE_URL=http://localhost:8712/api
 ```
 
-### Deployment ke Server
+### Deployment to Server
 
-1. **Copy project ke server**
-2. **Pastikan Docker dan Docker Compose terinstall**
-3. **Update `VITE_API_BASE_URL` sesuai domain production**
+1. **Copy project to server**
+2. **Ensure Docker and Docker Compose are installed**
+3. **Update `VITE_API_BASE_URL` according to production domain**
 4. **Run**:
 ```bash
 docker-compose up -d --build
@@ -204,7 +204,7 @@ docker-compose up -d --build
 
 ### Reverse Proxy (Nginx)
 
-Contoh konfigurasi Nginx untuk production:
+Example Nginx configuration for production:
 
 ```nginx
 server {
@@ -213,7 +213,7 @@ server {
 
     # Frontend
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:6173;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -223,7 +223,7 @@ server {
 
     # Backend API
     location /api {
-        proxy_pass http://localhost:8080;
+        proxy_pass http://localhost:8712;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -233,7 +233,7 @@ server {
 }
 ```
 
-## 📁 Struktur Project
+## 📁 Project Structure
 
 ```
 xtramile-intern/
@@ -318,7 +318,7 @@ curl -X POST http://localhost:8712/api/students \
 }
 ```
 
-**Dokumentasi lengkap**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
+**Complete documentation**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
 
 ## 🧪 Testing
 
@@ -329,8 +329,8 @@ cd intern-project-be
 ```
 
 ### Frontend Manual Testing
-1. Buka http://localhost:6173 (atau http://localhost:5173 untuk dev)
-2. Test semua fitur CRUD:
+1. Open http://localhost:6173 (or http://localhost:5173 for dev)
+2. Test all CRUD features:
    - Create student
    - View student list (pagination, sorting)
    - Search students
@@ -339,15 +339,15 @@ cd intern-project-be
    - Delete student
 
 ### API Testing
-Gunakan file `intern-project-be/api-test.http` dengan REST Client extension di VS Code.
+Use the `intern-project-be/api-test.http` file with REST Client extension in VS Code.
 
 ## 🔧 Troubleshooting
 
-### Port sudah digunakan
+### Port already in use
 ```bash
-# Check port yang digunakan
-lsof -i :8080  # Backend
-lsof -i :3000  # Frontend
+# Check which ports are in use
+lsof -i :8712  # Backend
+lsof -i :6173  # Frontend
 lsof -i :5432  # PostgreSQL
 
 # Kill process
@@ -363,15 +363,15 @@ docker-compose restart postgres
 docker-compose logs postgres
 ```
 
-### CORS error di frontend
-- Pastikan backend sudah running
-- Check `WebConfig.java` untuk CORS configuration
-- Restart backend setelah perubahan
+### CORS error in frontend
+- Ensure backend is running
+- Check `WebConfig.java` for CORS configuration
+- Restart backend after changes
 
-### Frontend tidak bisa connect ke backend
-- Pastikan `VITE_API_BASE_URL` sudah benar
+### Frontend cannot connect to backend
+- Ensure `VITE_API_BASE_URL` is correct
 - Check backend logs: `docker-compose logs backend`
-- Test API langsung: `curl http://localhost:8712/api/students`
+- Test API directly: `curl http://localhost:8712/api/students`
 
 ## 📝 License
 
@@ -387,4 +387,4 @@ This project is part of an internship assignment.
 
 **Happy Coding!** 🚀
 
-Untuk pertanyaan atau issues, silakan check dokumentasi lengkap di masing-masing folder project.
+For questions or issues, please check the complete documentation in each project folder.

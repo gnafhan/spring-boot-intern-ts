@@ -7,21 +7,22 @@ services:
     container_name: student-management-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: interndb
-      POSTGRES_USER: internuser
-      POSTGRES_PASSWORD: internpass
+      POSTGRES_DB: ${POSTGRES_DB:-interndb}
+      POSTGRES_USER: ${POSTGRES_USER:-internuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-internpass}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./intern-project-be/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - student-management-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U internuser -d interndb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-internuser} -d ${POSTGRES_DB:-interndb}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
   # Spring Boot Backend
   backend:
@@ -34,22 +35,45 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/interndb
-      SPRING_DATASOURCE_USERNAME: internuser
-      SPRING_DATASOURCE_PASSWORD: internpass
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-interndb}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-internuser}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-internpass}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "false"
       SERVER_PORT: 8080
-    ports:
-      - "8712:8080"
+    expose:
+      - "8080"
+    # Uncomment for local development without Traefik
+    # ports:
+    #   - "${BACKEND_PORT:-8712}:8080"
     networks:
       - student-management-network
+      - traefik_network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_network"
+      
+      # HTTP Router
+      - "traefik.http.routers.student-backend.rule=Host(`${BACKEND_DOMAIN:-api.student-management.example.com}`)"
+      - "traefik.http.routers.student-backend.entrypoints=websecure"
+      - "traefik.http.routers.student-backend.tls=true"
+      - "traefik.http.routers.student-backend.tls.certresolver=letsencrypt"
+      
+      # Service
+      - "traefik.http.services.student-backend.loadbalancer.server.port=8080"
+      
+      # Middleware (optional)
+      - "traefik.http.routers.student-backend.middlewares=student-backend-headers"
+      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
+      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolalloworigin=*"
+      - "traefik.http.middlewares.student-backend-headers.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.student-backend-headers.headers.addvaryheader=true"
 
   # React Frontend
   frontend:
@@ -57,24 +81,49 @@ services:
       context: ./intern-project-fe
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: http://localhost:8712/api
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://${BACKEND_DOMAIN:-api.student-management.example.com}}
     container_name: student-management-frontend
     restart: unless-stopped
     depends_on:
       - backend
-    ports:
-      - "6173:80"
+    expose:
+      - "80"
+    # Uncomment for local development without Traefik
+    # ports:
+    #   - "${FRONTEND_PORT:-6173}:80"
     networks:
       - student-management-network
+      - traefik_network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 10s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_network"
+      
+      # HTTP Router
+      - "traefik.http.routers.student-frontend.rule=Host(`${FRONTEND_DOMAIN:-student-management.example.com}`)"
+      - "traefik.http.routers.student-frontend.entrypoints=websecure"
+      - "traefik.http.routers.student-frontend.tls=true"
+      - "traefik.http.routers.student-frontend.tls.certresolver=letsencrypt"
+      
+      # Service
+      - "traefik.http.services.student-frontend.loadbalancer.server.port=80"
+      
+      # Middleware (optional) - for security headers
+      - "traefik.http.routers.student-frontend.middlewares=student-frontend-headers"
+      - "traefik.http.middlewares.student-frontend-headers.headers.browsersecure=true"
+      - "traefik.http.middlewares.student-frontend-headers.headers.framedeny=true"
+      - "traefik.http.middlewares.student-frontend-headers.headers.contenttypenosniff=true"
 
 networks:
   student-management-network:
     driver: bridge
+  traefik_network:
+    external: true
 
 volumes:
   postgres_data:

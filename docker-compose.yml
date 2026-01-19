@@ -16,6 +16,7 @@ services:
       - ./intern-project-be/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - student-management-network
+    hostname: student-management-db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-internuser} -d ${POSTGRES_DB:-interndb}"]
       interval: 10s
@@ -34,7 +35,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-interndb}
+      # Use full container name to avoid DNS resolution issues with traefik_network
+      SPRING_DATASOURCE_URL: jdbc:postgresql://student-management-db:5432/${POSTGRES_DB:-interndb}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-internuser}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-internpass}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update

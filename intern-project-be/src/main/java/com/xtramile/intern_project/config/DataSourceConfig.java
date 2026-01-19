@@ -28,7 +28,8 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        String jdbcUrl = getConfigValue("SPRING_DATASOURCE_URL", "spring.datasource.url", "jdbc:postgresql://postgres:5432/interndb");
+        // Use full container name to avoid DNS issues when on multiple networks
+        String jdbcUrl = getConfigValue("SPRING_DATASOURCE_URL", "spring.datasource.url", "jdbc:postgresql://student-management-db:5432/interndb");
         String username = getConfigValue("SPRING_DATASOURCE_USERNAME", "spring.datasource.username", "internuser");
         String password = getConfigValue("SPRING_DATASOURCE_PASSWORD", "spring.datasource.password", "internpass");
 

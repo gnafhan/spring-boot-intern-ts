@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -10,8 +8,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-interndb}
       POSTGRES_USER: ${POSTGRES_USER:-internuser}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-internpass}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+    # Comment out for production - database should not be exposed
+    # ports:
+    #   - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./intern-project-be/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -57,13 +56,12 @@ services:
       start_period: 40s
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik_network"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik_network}"
       
       # HTTP Router
-      - "traefik.http.routers.student-backend.rule=Host(`${BACKEND_DOMAIN:-api.student-management.example.com}`)"
+      - "traefik.http.routers.student-backend.rule=Host(`${BACKEND_SUBDOMAIN:-api-student}.${DOMAIN:-nafhan.com}`)"
       - "traefik.http.routers.student-backend.entrypoints=websecure"
-      - "traefik.http.routers.student-backend.tls=true"
-      - "traefik.http.routers.student-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.student-backend.tls.certresolver=${CERT_RESOLVER:-mytlschallenge}"
       
       # Service
       - "traefik.http.services.student-backend.loadbalancer.server.port=8080"
@@ -81,7 +79,7 @@ services:
       context: ./intern-project-fe
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://${BACKEND_DOMAIN:-api.student-management.example.com}}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://${BACKEND_SUBDOMAIN:-api-student}.${DOMAIN:-nafhan.com}}
     container_name: student-management-frontend
     restart: unless-stopped
     depends_on:
@@ -102,13 +100,12 @@ services:
       start_period: 10s
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=traefik_network"
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik_network}"
       
       # HTTP Router
-      - "traefik.http.routers.student-frontend.rule=Host(`${FRONTEND_DOMAIN:-student-management.example.com}`)"
+      - "traefik.http.routers.student-frontend.rule=Host(`${FRONTEND_SUBDOMAIN:-student-management}.${DOMAIN:-nafhan.com}`)"
       - "traefik.http.routers.student-frontend.entrypoints=websecure"
-      - "traefik.http.routers.student-frontend.tls=true"
-      - "traefik.http.routers.student-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.student-frontend.tls.certresolver=${CERT_RESOLVER:-mytlschallenge}"
       
       # Service
       - "traefik.http.services.student-frontend.loadbalancer.server.port=80"
@@ -124,6 +121,7 @@ networks:
     driver: bridge
   traefik_network:
     external: true
+    name: ${TRAEFIK_NETWORK:-traefik_network}
 
 volumes:
   postgres_data:

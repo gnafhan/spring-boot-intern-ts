@@ -68,12 +68,14 @@ services:
       # Service
       - "traefik.http.services.student-backend.loadbalancer.server.port=8080"
       
-      # Middleware (optional) - CORS headers
-      - "traefik.http.routers.student-backend.middlewares=student-backend-headers"
-      - "traefik.http.middlewares.student-backend-headers.headers.accessControlAllowMethods=GET,POST,PUT,DELETE,OPTIONS"
-      - "traefik.http.middlewares.student-backend-headers.headers.accessControlAllowOriginList=*"
-      - "traefik.http.middlewares.student-backend-headers.headers.accessControlMaxAge=100"
-      - "traefik.http.middlewares.student-backend-headers.headers.addVaryHeader=true"
+      # Middleware - CORS headers
+      - "traefik.http.routers.student-backend.middlewares=student-backend-cors"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowMethods=GET,POST,PUT,DELETE,OPTIONS"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowHeaders=Content-Type,Authorization,X-Requested-With,Accept,Origin"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowOriginList=https://student-management.nafhan.com"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlMaxAge=100"
+      - "traefik.http.middlewares.student-backend-cors.headers.addVaryHeader=true"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowCredentials=true"
 
   # React Frontend
   frontend:
@@ -81,7 +83,8 @@ services:
       context: ./intern-project-fe
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://${BACKEND_SUBDOMAIN:-api-student}.${DOMAIN:-nafhan.com}}
+        # Note: Must include /api path
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://${BACKEND_SUBDOMAIN:-api-student}.${DOMAIN:-nafhan.com}/api}
     container_name: student-management-frontend
     restart: unless-stopped
     depends_on:

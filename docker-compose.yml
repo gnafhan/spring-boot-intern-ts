@@ -51,11 +51,11 @@ services:
       - student-management-network
       - traefik_network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/students?page=0&size=1"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 60s
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik_network}"
@@ -114,9 +114,9 @@ services:
       
       # Middleware (optional) - for security headers
       - "traefik.http.routers.student-frontend.middlewares=student-frontend-headers"
-      - "traefik.http.middlewares.student-frontend-headers.headers.browsersecure=true"
-      - "traefik.http.middlewares.student-frontend-headers.headers.framedeny=true"
-      - "traefik.http.middlewares.student-frontend-headers.headers.contenttypenosniff=true"
+      - "traefik.http.middlewares.student-frontend-headers.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.student-frontend-headers.headers.frameDeny=true"
+      - "traefik.http.middlewares.student-frontend-headers.headers.contentTypeNosniff=true"
 
 networks:
   student-management-network:

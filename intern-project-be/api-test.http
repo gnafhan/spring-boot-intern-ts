@@ -1,0 +1,354 @@
+### Variables
+@baseUrl = http://localhost:8080/api
+
+###############################################
+# Health Check Endpoints
+###############################################
+
+### Health Status
+GET {{baseUrl}}/health
+
+### Hello Endpoint
+GET {{baseUrl}}/hello
+
+###############################################
+# STUDENT MANAGEMENT API
+###############################################
+
+###############################################
+# 1. Create Student (POST)
+###############################################
+
+### Create Student - Valid Data
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "John",
+  "namaBelakang": "Doe",
+  "tanggalLahir": "2004-05-15"
+}
+
+### Create Student - Without Last Name (Valid)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Jane",
+  "tanggalLahir": "2005-08-20"
+}
+
+### Create Student - Invalid (Missing Required Field)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaBelakang": "Smith",
+  "tanggalLahir": "2004-03-10"
+}
+
+### Create Student - Invalid (Future Date)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Test",
+  "namaBelakang": "User",
+  "tanggalLahir": "2030-01-01"
+}
+
+### Create Student - Invalid (Too Young - Age < 17)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Young",
+  "namaBelakang": "Student",
+  "tanggalLahir": "2015-01-01"
+}
+
+### Create Student - Invalid (Too Old - Age > 40)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Old",
+  "namaBelakang": "Student",
+  "tanggalLahir": "1970-01-01"
+}
+
+### Create Student - Invalid (Special Characters in Name)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Test@123",
+  "namaBelakang": "User#456",
+  "tanggalLahir": "2004-01-01"
+}
+
+###############################################
+# 2. Get All Students (GET) with Pagination
+###############################################
+
+### Get All Students - Default Pagination
+GET {{baseUrl}}/students
+
+### Get All Students - Page 0, Size 5
+GET {{baseUrl}}/students?page=0&size=5
+
+### Get All Students - Page 1, Size 5
+GET {{baseUrl}}/students?page=1&size=5
+
+### Get All Students - Sort by Name Ascending
+GET {{baseUrl}}/students?sort=namaDepan,asc
+
+### Get All Students - Sort by Name Descending
+GET {{baseUrl}}/students?sort=namaDepan,desc
+
+### Get All Students - Sort by Birth Date
+GET {{baseUrl}}/students?sort=tanggalLahir,asc
+
+### Get All Students - Complex Query
+GET {{baseUrl}}/students?page=0&size=10&sort=namaDepan,asc
+
+###############################################
+# 3. Get Student by Nomor Induk (GET)
+###############################################
+
+### Get Student by Nomor Induk - Valid
+GET {{baseUrl}}/students/2026001
+
+### Get Student by Nomor Induk - Another Valid
+GET {{baseUrl}}/students/2026002
+
+### Get Student by Nomor Induk - Not Found
+GET {{baseUrl}}/students/9999999
+
+###############################################
+# 4. Update Student (PUT)
+###############################################
+
+### Update Student - Valid
+PUT {{baseUrl}}/students/2026001
+Content-Type: application/json
+
+{
+  "namaDepan": "Budi Updated",
+  "namaBelakang": "Santoso Updated",
+  "tanggalLahir": "2004-03-15"
+}
+
+### Update Student - Change Name Only
+PUT {{baseUrl}}/students/2026002
+Content-Type: application/json
+
+{
+  "namaDepan": "Siti Nur",
+  "namaBelakang": "Haliza",
+  "tanggalLahir": "2005-07-22"
+}
+
+### Update Student - Remove Last Name
+PUT {{baseUrl}}/students/2026003
+Content-Type: application/json
+
+{
+  "namaDepan": "Ahmad",
+  "tanggalLahir": "2004-11-10"
+}
+
+### Update Student - Not Found
+PUT {{baseUrl}}/students/9999999
+Content-Type: application/json
+
+{
+  "namaDepan": "Test",
+  "namaBelakang": "User",
+  "tanggalLahir": "2004-01-01"
+}
+
+### Update Student - Invalid Data (Future Date)
+PUT {{baseUrl}}/students/2026001
+Content-Type: application/json
+
+{
+  "namaDepan": "Budi",
+  "namaBelakang": "Santoso",
+  "tanggalLahir": "2030-01-01"
+}
+
+###############################################
+# 5. Search Students (GET)
+###############################################
+
+### Search Students - By First Name
+GET {{baseUrl}}/students/search?keyword=Budi
+
+### Search Students - By Last Name
+GET {{baseUrl}}/students/search?keyword=Santoso
+
+### Search Students - Partial Match
+GET {{baseUrl}}/students/search?keyword=Sit
+
+### Search Students - Case Insensitive
+GET {{baseUrl}}/students/search?keyword=budi
+
+### Search Students - With Pagination
+GET {{baseUrl}}/students/search?keyword=a&page=0&size=3
+
+### Search Students - With Sorting
+GET {{baseUrl}}/students/search?keyword=i&sort=namaDepan,asc
+
+### Search Students - No Results
+GET {{baseUrl}}/students/search?keyword=XYZ123
+
+### Search Students - Empty Keyword (returns all)
+GET {{baseUrl}}/students/search?keyword=
+
+###############################################
+# 6. Delete Student (DELETE)
+###############################################
+
+### Delete Student - Valid
+DELETE {{baseUrl}}/students/2026008
+
+### Delete Student - Not Found
+DELETE {{baseUrl}}/students/9999999
+
+### Delete Student - After Deletion (Should get 404)
+GET {{baseUrl}}/students/2026008
+
+###############################################
+# 7. Complete CRUD Flow Test
+###############################################
+
+### Step 1: Create New Student
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Test",
+  "namaBelakang": "CRUD Flow",
+  "tanggalLahir": "2004-06-15"
+}
+
+### Step 2: Get All Students (Check if new student exists)
+GET {{baseUrl}}/students
+
+### Step 3: Get Student by Nomor Induk (Use nomor from Step 1 response)
+# Replace XXXXX with actual nomor induk from Step 1
+GET {{baseUrl}}/students/2026009
+
+### Step 4: Update Student
+# Replace XXXXX with actual nomor induk
+PUT {{baseUrl}}/students/2026009
+Content-Type: application/json
+
+{
+  "namaDepan": "Test Updated",
+  "namaBelakang": "CRUD Flow Updated",
+  "tanggalLahir": "2004-06-15"
+}
+
+### Step 5: Search for Updated Student
+GET {{baseUrl}}/students/search?keyword=CRUD
+
+### Step 6: Delete Student
+# Replace XXXXX with actual nomor induk
+DELETE {{baseUrl}}/students/2026009
+
+### Step 7: Verify Deletion (Should return 404)
+GET {{baseUrl}}/students/2026009
+
+###############################################
+# 8. Batch Create Students
+###############################################
+
+### Create Student 1
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Batch",
+  "namaBelakang": "One",
+  "tanggalLahir": "2004-01-01"
+}
+
+###
+
+### Create Student 2
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Batch",
+  "namaBelakang": "Two",
+  "tanggalLahir": "2004-02-02"
+}
+
+###
+
+### Create Student 3
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Batch",
+  "namaBelakang": "Three",
+  "tanggalLahir": "2004-03-03"
+}
+
+###
+
+### Search Batch Students
+GET {{baseUrl}}/students/search?keyword=Batch
+
+###############################################
+# 9. Edge Cases & Error Scenarios
+###############################################
+
+### Invalid JSON Format
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Test"
+  "tanggalLahir": "2004-01-01"
+}
+
+### Empty Request Body
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{}
+
+### NULL Values
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": null,
+  "namaBelakang": null,
+  "tanggalLahir": null
+}
+
+### Invalid Date Format
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "Test",
+  "namaBelakang": "User",
+  "tanggalLahir": "01-01-2004"
+}
+
+### Very Long Name (> 100 chars)
+POST {{baseUrl}}/students
+Content-Type: application/json
+
+{
+  "namaDepan": "ThisIsAVeryLongNameThatExceedsTheMaximumAllowedLengthOfOneHundredCharactersAndShouldBeRejectedByTheValidation",
+  "namaBelakang": "Test",
+  "tanggalLahir": "2004-01-01"
+}

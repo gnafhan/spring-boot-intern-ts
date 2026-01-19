@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: student-management-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: interndb
+      POSTGRES_USER: internuser
+      POSTGRES_PASSWORD: internpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./intern-project-be/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - student-management-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U internuser -d interndb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./intern-project-be
+      dockerfile: Dockerfile
+    container_name: student-management-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/interndb
+      SPRING_DATASOURCE_USERNAME: internuser
+      SPRING_DATASOURCE_PASSWORD: internpass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "false"
+      SERVER_PORT: 8080
+    ports:
+      - "8712:8080"
+    networks:
+      - student-management-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./intern-project-fe
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8712/api
+    container_name: student-management-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "6173:80"
+    networks:
+      - student-management-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  student-management-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

@@ -19,7 +19,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
               <div>
                 <h1 className="text-xl font-bold">Student Management</h1>
-                <p className="text-xs text-muted-foreground">Sistem Manajemen Mahasiswa</p>
+                <p className="text-xs text-muted-foreground">Student Management System</p>
               </div>
             </Link>
             
@@ -28,7 +28,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 to="/"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                ← Kembali ke Daftar
+                ← Back to List
               </Link>
             )}
           </div>

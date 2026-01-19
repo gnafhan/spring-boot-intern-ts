@@ -16,7 +16,7 @@ export function CreateStudentPage() {
   const handleSubmit = async (data: StudentFormSchema) => {
     try {
       const result = await createMutation.mutateAsync(data);
-      toast.success(`Mahasiswa berhasil dibuat dengan Nomor Induk: ${result.data.nomorInduk}`);
+      toast.success(`Student created successfully with Student ID: ${result.data.nomorInduk}`);
       navigate(`/students/${result.data.nomorInduk}`);
     } catch (error) {
       // Error will be displayed in the form area
@@ -27,23 +27,23 @@ export function CreateStudentPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <PageHeader
-        title="Tambah Mahasiswa Baru"
-        description="Isi formulir di bawah untuk menambahkan mahasiswa baru"
+        title="Add New Student"
+        description="Fill the form below to add a new student"
         action={
           <Button variant="outline" onClick={() => navigate('/')}>
             <span className="mr-2">←</span>
-            Kembali
+            Back
           </Button>
         }
       />
       
       {createMutation.isError && (
         <ErrorAlert
-          title="Gagal Membuat Mahasiswa"
+          title="Failed to Create Student"
           message={
             createMutation.error instanceof ApiError
               ? createMutation.error.message
-              : 'Terjadi kesalahan saat membuat mahasiswa'
+              : 'An error occurred while creating student'
           }
           errors={
             createMutation.error instanceof ApiError

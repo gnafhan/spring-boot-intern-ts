@@ -36,23 +36,23 @@ export function StudentTable({
             <tr className="border-b">
               <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
                 {onSort ? (
-                  <SortButton field="nomorInduk">Nomor Induk</SortButton>
+                  <SortButton field="nomorInduk">Student ID</SortButton>
                 ) : (
-                  'Nomor Induk'
+                  'Student ID'
                 )}
               </th>
               <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
                 {onSort ? (
-                  <SortButton field="namaLengkap">Nama Lengkap</SortButton>
+                  <SortButton field="namaLengkap">Full Name</SortButton>
                 ) : (
-                  'Nama Lengkap'
+                  'Full Name'
                 )}
               </th>
               <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">
-                {onSort ? <SortButton field="usia">Usia</SortButton> : 'Usia'}
+                {onSort ? <SortButton field="usia">Age</SortButton> : 'Age'}
               </th>
               <th className="px-4 py-3 text-right text-sm font-medium text-muted-foreground">
-                Aksi
+                Actions
               </th>
             </tr>
           </thead>
@@ -62,7 +62,7 @@ export function StudentTable({
                 <td className="px-4 py-3 text-sm font-medium">{student.nomorInduk}</td>
                 <td className="px-4 py-3 text-sm">{student.namaLengkap}</td>
                 <td className="px-4 py-3 text-sm">
-                  <Badge variant="outline">{student.usia} tahun</Badge>
+                  <Badge variant="outline">{student.usia} years</Badge>
                 </td>
                 <td className="px-4 py-3 text-sm">
                   <div className="flex items-center justify-end gap-2">
@@ -70,7 +70,7 @@ export function StudentTable({
                       variant="ghost"
                       size="sm"
                       onClick={() => onView(student.nomorInduk)}
-                      title="Lihat detail"
+                      title="View details"
                     >
                       <span>👁</span>
                     </Button>
@@ -78,7 +78,7 @@ export function StudentTable({
                       variant="ghost"
                       size="sm"
                       onClick={() => onEdit(student.nomorInduk)}
-                      title="Edit mahasiswa"
+                      title="Edit student"
                     >
                       <span>✏️</span>
                     </Button>
@@ -86,7 +86,7 @@ export function StudentTable({
                       variant="ghost"
                       size="sm"
                       onClick={() => onDelete(student.nomorInduk, student.namaLengkap)}
-                      title="Hapus mahasiswa"
+                      title="Delete student"
                       className="text-destructive hover:text-destructive"
                     >
                       <span>🗑️</span>

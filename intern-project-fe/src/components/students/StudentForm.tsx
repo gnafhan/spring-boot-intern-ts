@@ -39,32 +39,32 @@ export function StudentForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{isEdit ? 'Edit Mahasiswa' : 'Tambah Mahasiswa Baru'}</CardTitle>
+        <CardTitle>{isEdit ? 'Edit Student' : 'Add New Student'}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {isEdit && defaultValues?.nomorInduk && (
             <div className="space-y-2">
-              <Label>Nomor Induk</Label>
+              <Label>Student ID</Label>
               <Input
                 value={defaultValues.nomorInduk}
                 disabled
                 className="bg-muted"
               />
               <p className="text-xs text-muted-foreground">
-                Nomor induk tidak dapat diubah
+                Student ID cannot be changed
               </p>
             </div>
           )}
           
           <div className="space-y-2">
             <Label htmlFor="namaDepan">
-              Nama Depan <span className="text-destructive">*</span>
+              First Name <span className="text-destructive">*</span>
             </Label>
             <Input
               id="namaDepan"
               {...register('namaDepan')}
-              placeholder="Masukkan nama depan"
+              placeholder="Enter first name"
               disabled={isLoading}
               aria-invalid={errors.namaDepan ? 'true' : 'false'}
             />
@@ -72,16 +72,16 @@ export function StudentForm({
               <p className="text-sm text-destructive">{errors.namaDepan.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
-              2-100 karakter, hanya huruf, spasi, dan tanda hubung
+              2-100 characters, letters, spaces, and hyphens only
             </p>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="namaBelakang">Nama Belakang</Label>
+            <Label htmlFor="namaBelakang">Last Name</Label>
             <Input
               id="namaBelakang"
               {...register('namaBelakang')}
-              placeholder="Masukkan nama belakang (opsional)"
+              placeholder="Enter last name (optional)"
               disabled={isLoading}
               aria-invalid={errors.namaBelakang ? 'true' : 'false'}
             />
@@ -89,13 +89,13 @@ export function StudentForm({
               <p className="text-sm text-destructive">{errors.namaBelakang.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
-              Opsional, maksimal 100 karakter
+              Optional, maximum 100 characters
             </p>
           </div>
           
           <div className="space-y-2">
             <Label htmlFor="tanggalLahir">
-              Tanggal Lahir <span className="text-destructive">*</span>
+              Date of Birth <span className="text-destructive">*</span>
             </Label>
             <Input
               id="tanggalLahir"
@@ -108,13 +108,13 @@ export function StudentForm({
               <p className="text-sm text-destructive">{errors.tanggalLahir.message}</p>
             )}
             <p className="text-xs text-muted-foreground">
-              Usia harus antara 17-40 tahun
+              Age must be between 17-40 years
             </p>
           </div>
           
           <div className="flex gap-3 pt-4">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? (isEdit ? 'Menyimpan...' : 'Membuat...') : (isEdit ? 'Simpan Perubahan' : 'Buat Mahasiswa')}
+              {isLoading ? (isEdit ? 'Saving...' : 'Creating...') : (isEdit ? 'Save Changes' : 'Create Student')}
             </Button>
           </div>
         </form>

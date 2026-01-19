@@ -1,293 +1,90 @@
-# Student Management System - Full Stack Application
+# Student Management System
 
-Complete student management system with backend REST API (Spring Boot) and frontend SPA (React + TypeScript).
+A full-stack student management application with Spring Boot REST API backend and React TypeScript frontend.
 
-## 📋 Table of Contents
+**Live Demo:** https://student-management.nafhan.com
 
-- [Features](#features)
-- [Technologies](#technologies)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Development](#development)
-- [Production Deployment](#production-deployment)
-- [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
+## Features
 
-## ✨ Features
-
-### Backend (Spring Boot)
-- ✅ RESTful API with N-tier architecture
 - ✅ CRUD operations for student data
+- ✅ Auto-generated Student ID (format: YYYY###)
 - ✅ Pagination, sorting, and search
-- ✅ Auto-generated student ID (Nomor Induk Mahasiswa)
-- ✅ Comprehensive validation (age 17-40, name format, etc.)
-- ✅ Global exception handling
-- ✅ PostgreSQL database
-- ✅ Docker support
-- ✅ CORS configuration
+- ✅ Form validation (client & server side)
+- ✅ Age validation (17-40 years)
+- ✅ Responsive design with dark mode
+- ✅ Docker containerized deployment
+- ✅ Traefik reverse proxy with SSL
 
-### Frontend (React + TypeScript)
-- ✅ Single Page Application (SPA)
-- ✅ Modern UI with Tailwind CSS & shadcn/ui
-- ✅ Form validation (client & server)
-- ✅ Real-time search with debouncing
-- ✅ Pagination controls
-- ✅ Loading states & error handling
-- ✅ Toast notifications
-- ✅ Confirmation dialogs
-- ✅ Responsive design (mobile-friendly)
-- ✅ Dark mode support
+## Tech Stack
 
-## 🛠 Technologies
+| Backend | Frontend |
+|---------|----------|
+| Java 21 | React 19 |
+| Spring Boot 4.0.1 | TypeScript |
+| Spring Data JPA | Vite |
+| PostgreSQL 16 | TanStack Query |
+| Maven | React Router v7 |
+| Docker | Tailwind CSS v4 |
+| | shadcn/ui |
 
-### Backend
-- Java 21
-- Spring Boot 4.0.1
-- Spring Data JPA
-- PostgreSQL 16
-- Maven
-- Docker & Docker Compose
+## Quick Start
 
-### Frontend
-- React 19
-- TypeScript
-- Vite
-- TanStack Query (React Query)
-- React Router v7
-- React Hook Form + Zod
-- Tailwind CSS v4
-- shadcn/ui
-- date-fns
-
-## 📦 Prerequisites
-
-- **Docker Desktop** (recommended) or
-- **Node.js 18+** and **JDK 21** (for local development)
-
-## 🚀 Quick Start
-
-### Option 1: Docker Compose (Recommended)
-
-Run the entire application (backend + frontend + database) with one command:
+### Using Docker (Recommended)
 
 ```bash
-# In root project directory
-docker-compose up -d --build
+# Clone the repository
+git clone <repo-url>
+cd xtramile-intern
+
+# Start all services
+docker compose up -d --build
+
+# View logs
+docker compose logs -f
 ```
 
-Application will be available at:
-- **Frontend**: http://localhost:6173
-- **Backend API**: http://localhost:8712/api
-- **Database**: localhost:5432
+**Access:**
+- Frontend: http://localhost:6173
+- Backend API: http://localhost:8712/api
+- Database: localhost:5432
 
-To stop the application:
-```bash
-docker-compose down
-```
+### Manual Development
 
-### Option 2: Manual Development Setup
-
-#### 1. Start Backend
+**Backend:**
 ```bash
 cd intern-project-be
-docker-compose up -d --build
-# Backend will run at http://localhost:8712
+docker compose up -d --build
+# API runs at http://localhost:8712
 ```
 
-#### 2. Start Frontend
+**Frontend:**
 ```bash
 cd intern-project-fe
 npm install
 npm run dev
-# Frontend will run at http://localhost:5173
+# App runs at http://localhost:5173
 ```
 
-## 💻 Development
-
-### Backend Development
-
-```bash
-cd intern-project-be
-
-# Start with Docker
-docker-compose up -d
-
-# Or without Docker (requires PostgreSQL running)
-./mvnw spring-boot:run
-
-# Build
-./mvnw clean package
-
-# Run tests
-./mvnw test
-```
-
-**Complete documentation**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
-
-### Frontend Development
-
-```bash
-cd intern-project-fe
-
-# Install dependencies
-npm install
-
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Linting
-npm run lint
-```
-
-**Complete documentation**: [intern-project-fe/README.md](intern-project-fe/README.md)
-
-## 🚢 Production Deployment
-
-### Using Docker Compose
-
-1. **Build and run all services**:
-```bash
-docker-compose up -d --build
-```
-
-2. **Check logs**:
-```bash
-# All services
-docker-compose logs -f
-
-# Backend only
-docker-compose logs -f backend
-
-# Frontend only
-docker-compose logs -f frontend
-```
-
-3. **Stop services**:
-```bash
-docker-compose down
-
-# With removing volumes (database will be reset)
-docker-compose down -v
-```
-
-### Environment Variables
-
-Create a `.env` file in the root project (optional):
-
-```env
-# Backend
-DB_HOST=postgres
-DB_PORT=5432
-DB_NAME=interndb
-DB_USER=internuser
-DB_PASSWORD=internpass
-
-# Frontend
-VITE_API_BASE_URL=http://localhost:8712/api
-```
-
-### Deployment to Server
-
-1. **Copy project to server**
-2. **Ensure Docker and Docker Compose are installed**
-3. **Update `VITE_API_BASE_URL` according to production domain**
-4. **Run**:
-```bash
-docker-compose up -d --build
-```
-
-### Reverse Proxy (Nginx)
-
-Example Nginx configuration for production:
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    # Frontend
-    location / {
-        proxy_pass http://localhost:6173;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Backend API
-    location /api {
-        proxy_pass http://localhost:8712;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-## 📁 Project Structure
-
-```
-xtramile-intern/
-├── intern-project-be/          # Backend Spring Boot
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/
-│   │   │   │   └── com/xtramile/intern_project/
-│   │   │   │       ├── config/
-│   │   │   │       ├── controller/
-│   │   │   │       ├── dto/
-│   │   │   │       ├── exception/
-│   │   │   │       ├── model/
-│   │   │   │       ├── repository/
-│   │   │   │       └── service/
-│   │   │   └── resources/
-│   │   └── test/
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   ├── pom.xml
-│   └── README-STUDENT-API.md
-│
-├── intern-project-fe/          # Frontend React + TypeScript
-│   ├── src/
-│   │   ├── api/               # API client
-│   │   ├── components/        # React components
-│   │   ├── hooks/             # Custom hooks
-│   │   ├── lib/               # Utilities
-│   │   ├── pages/             # Page components
-│   │   ├── types/             # TypeScript types
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── Dockerfile
-│   ├── package.json
-│   └── README.md
-│
-├── docker-compose.yml          # Production compose
-└── README.md                   # This file
-```
-
-## 📚 API Documentation
+## API Documentation
 
 ### Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/students` | List students (paginated) |
-| GET | `/api/students/{nomorInduk}` | Get student by ID |
-| POST | `/api/students` | Create new student |
-| PUT | `/api/students/{nomorInduk}` | Update student |
-| DELETE | `/api/students/{nomorInduk}` | Delete student |
+| GET | `/api/students/{id}` | Get student by ID |
+| POST | `/api/students` | Create student |
+| PUT | `/api/students/{id}` | Update student |
+| DELETE | `/api/students/{id}` | Delete student |
 | GET | `/api/students/search?keyword={term}` | Search students |
 
-### Request Example
+### Query Parameters
+
+- `page` (default: 0) - Page number
+- `size` (default: 10) - Items per page
+- `sort` (default: nomorInduk,asc) - Sort field and direction
+
+### Request/Response Examples
 
 **Create Student:**
 ```bash
@@ -318,73 +115,178 @@ curl -X POST http://localhost:8712/api/students \
 }
 ```
 
-**Complete documentation**: [intern-project-be/README-STUDENT-API.md](intern-project-be/README-STUDENT-API.md)
+### Validation Rules
 
-## 🧪 Testing
+| Field | Rules |
+|-------|-------|
+| namaDepan | Required, 2-100 chars, letters/spaces/hyphens only |
+| namaBelakang | Optional, max 100 chars |
+| tanggalLahir | Required, age must be 17-40 years |
 
-### Backend Tests
-```bash
-cd intern-project-be
-./mvnw test
+### Error Response Format
+
+```json
+{
+  "timestamp": "2026-01-19T10:30:00",
+  "status": 400,
+  "error": "Validation Failed",
+  "message": "Invalid data",
+  "path": "/api/students",
+  "errors": ["First name is required"]
+}
 ```
 
-### Frontend Manual Testing
-1. Open http://localhost:6173 (or http://localhost:5173 for dev)
-2. Test all CRUD features:
-   - Create student
-   - View student list (pagination, sorting)
-   - Search students
-   - View student detail
-   - Edit student
-   - Delete student
+## Project Structure
 
-### API Testing
-Use the `intern-project-be/api-test.http` file with REST Client extension in VS Code.
+```
+xtramile-intern/
+├── intern-project-be/           # Spring Boot Backend
+│   ├── src/main/java/com/xtramile/intern_project/
+│   │   ├── config/              # CORS, OpenAPI config
+│   │   ├── controller/          # REST controllers
+│   │   ├── dto/                 # Data transfer objects
+│   │   ├── exception/           # Exception handlers
+│   │   ├── model/               # JPA entities
+│   │   ├── repository/          # Data access layer
+│   │   └── service/             # Business logic
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── intern-project-fe/           # React Frontend
+│   ├── src/
+│   │   ├── api/                 # API client
+│   │   ├── components/          # UI components
+│   │   ├── hooks/               # Custom React hooks
+│   │   ├── lib/                 # Utilities
+│   │   ├── pages/               # Page components
+│   │   └── types/               # TypeScript types
+│   ├── Dockerfile
+│   └── package.json
+│
+├── docker-compose.yml           # Production stack
+└── README.md
+```
 
-## 🔧 Troubleshooting
+## Production Deployment
+
+### With Traefik (Recommended)
+
+1. **Configure environment:**
+```bash
+cp .env.example .env
+# Edit .env with your domain settings
+```
+
+**.env example:**
+```env
+DOMAIN=yourdomain.com
+FRONTEND_SUBDOMAIN=student-management
+BACKEND_SUBDOMAIN=api-student
+TRAEFIK_NETWORK=traefik_network
+CERT_RESOLVER=mytlschallenge
+POSTGRES_DB=interndb
+POSTGRES_USER=internuser
+POSTGRES_PASSWORD=your_secure_password
+VITE_API_BASE_URL=https://api-student.yourdomain.com/api
+BACKEND_DOMAIN=api-student.yourdomain.com
+FRONTEND_DOMAIN=student-management.yourdomain.com
+```
+
+2. **Ensure DNS records point to your server:**
+   - `student-management.yourdomain.com` → Server IP
+   - `api-student.yourdomain.com` → Server IP
+
+3. **Deploy:**
+```bash
+docker compose up -d --build
+```
+
+### Without Traefik
+
+Uncomment the `ports` section in `docker-compose.yml` and access via:
+- Frontend: http://your-server:6173
+- Backend: http://your-server:8712
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| POSTGRES_DB | Database name | interndb |
+| POSTGRES_USER | Database user | internuser |
+| POSTGRES_PASSWORD | Database password | internpass |
+| VITE_API_BASE_URL | API URL for frontend | http://localhost:8712/api |
+| DOMAIN | Production domain | - |
+| FRONTEND_SUBDOMAIN | Frontend subdomain | student-management |
+| BACKEND_SUBDOMAIN | Backend subdomain | api-student |
+
+## Troubleshooting
 
 ### Port already in use
 ```bash
-# Check which ports are in use
 lsof -i :8712  # Backend
 lsof -i :6173  # Frontend
-lsof -i :5432  # PostgreSQL
-
-# Kill process
 kill -9 <PID>
 ```
 
 ### Database connection error
 ```bash
-# Restart database
-docker-compose restart postgres
-
-# Check logs
-docker-compose logs postgres
+docker compose restart postgres
+docker compose logs postgres
 ```
 
-### CORS error in frontend
-- Ensure backend is running
-- Check `WebConfig.java` for CORS configuration
-- Restart backend after changes
+### CORS error
+- Verify backend is running
+- Check `WebConfig.java` CORS configuration
+- Ensure frontend URL is in allowed origins
 
-### Frontend cannot connect to backend
-- Ensure `VITE_API_BASE_URL` is correct
-- Check backend logs: `docker-compose logs backend`
-- Test API directly: `curl http://localhost:8712/api/students`
+### Container issues
+```bash
+# Full reset
+docker compose down -v
+docker compose up -d --build
+```
 
-## 📝 License
+## Development
 
-This project is part of an internship assignment.
+### Running Tests
 
-## 👨‍💻 Development Team
+**Backend:**
+```bash
+cd intern-project-be
+./mvnw test
+```
 
-- Backend: Spring Boot + PostgreSQL
-- Frontend: React + TypeScript
-- Infrastructure: Docker + Docker Compose
+**Frontend:**
+```bash
+cd intern-project-fe
+npm run lint
+npm run build
+```
+
+### API Testing
+
+Use the `intern-project-be/api-test.http` file with VS Code REST Client extension.
+
+## Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Frontend  │────▶│   Backend   │────▶│  PostgreSQL │
+│   (React)   │     │ (Spring)    │     │  Database   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       │                   │
+       └───────────────────┴────▶ Traefik (SSL/Routing)
+```
+
+**N-Tier Architecture:**
+- Controller Layer → HTTP request/response handling
+- Service Layer → Business logic, validation
+- Repository Layer → Database operations
+
+## License
+
+This project is part of an internship assignment at Xtramile.
 
 ---
 
 **Happy Coding!** 🚀
-
-For questions or issues, please check the complete documentation in each project folder.

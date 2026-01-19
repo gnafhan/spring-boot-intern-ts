@@ -29,14 +29,14 @@ export function DeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Hapus Mahasiswa?</AlertDialogTitle>
+          <AlertDialogTitle>Delete Student?</AlertDialogTitle>
           <AlertDialogDescription>
-            Apakah Anda yakin ingin menghapus mahasiswa <strong>{studentName}</strong>?
-            Tindakan ini tidak dapat dibatalkan.
+            Are you sure you want to delete student <strong>{studentName}</strong>?
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Batal</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
@@ -45,7 +45,7 @@ export function DeleteDialog({
             disabled={isLoading}
             className="bg-destructive hover:bg-destructive/90"
           >
-            {isLoading ? 'Menghapus...' : 'Hapus'}
+            {isLoading ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

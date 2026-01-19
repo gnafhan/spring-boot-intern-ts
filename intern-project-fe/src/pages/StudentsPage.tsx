@@ -68,13 +68,13 @@ export function StudentsPage() {
   const handleDelete = async () => {
     try {
       await deleteMutation.mutateAsync(deleteDialog.nomorInduk);
-      toast.success('Mahasiswa berhasil dihapus');
+      toast.success('Student deleted successfully');
       setDeleteDialog({ open: false, nomorInduk: '', namaLengkap: '' });
     } catch (error) {
       if (error instanceof ApiError) {
         toast.error(error.message);
       } else {
-        toast.error('Gagal menghapus mahasiswa');
+        toast.error('Failed to delete student');
       }
     }
   };
@@ -88,12 +88,12 @@ export function StudentsPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          title="Daftar Mahasiswa"
-          description="Kelola data mahasiswa Anda"
+          title="Student List"
+          description="Manage your student data"
         />
         <ErrorAlert
-          title="Gagal Memuat Data"
-          message={error instanceof ApiError ? error.message : 'Terjadi kesalahan saat memuat data mahasiswa'}
+          title="Failed to Load Data"
+          message={error instanceof ApiError ? error.message : 'An error occurred while loading student data'}
         />
       </div>
     );
@@ -105,12 +105,12 @@ export function StudentsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Daftar Mahasiswa"
-        description={`Total ${pageData?.totalItems || 0} mahasiswa terdaftar`}
+        title="Student List"
+        description={`Total ${pageData?.totalItems || 0} students registered`}
         action={
           <Button onClick={() => navigate('/students/create')}>
             <span className="mr-2">➕</span>
-            Tambah Mahasiswa
+            Add Student
           </Button>
         }
       />
@@ -121,17 +121,17 @@ export function StudentsPage() {
       
       {students.length === 0 ? (
         <EmptyState
-          title={isSearching ? 'Tidak ada hasil' : 'Belum ada mahasiswa'}
+          title={isSearching ? 'No results' : 'No students yet'}
           description={
             isSearching
-              ? `Tidak ada mahasiswa yang cocok dengan pencarian "${searchKeyword}"`
-              : 'Mulai tambahkan mahasiswa baru dengan klik tombol "Tambah Mahasiswa"'
+              ? `No students match the search "${searchKeyword}"`
+              : 'Start adding new students by clicking "Add Student" button'
           }
           action={
             !isSearching && (
               <Button onClick={() => navigate('/students/create')}>
             <span className="mr-2">➕</span>
-            Tambah Mahasiswa
+            Add Student
               </Button>
             )
           }

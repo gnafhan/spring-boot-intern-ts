@@ -10,7 +10,7 @@ interface SearchBarProps {
 
 export function SearchBar({ 
   onSearch, 
-  placeholder = 'Cari mahasiswa...', 
+  placeholder = 'Search students...', 
   defaultValue = '' 
 }: SearchBarProps) {
   const [value, setValue] = useState(defaultValue);

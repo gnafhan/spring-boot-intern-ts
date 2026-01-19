@@ -26,7 +26,7 @@ export function EditStudentPage() {
         nomorInduk,
         data: formData,
       });
-      toast.success('Mahasiswa berhasil diperbarui');
+      toast.success('Student updated successfully');
       navigate(`/students/${nomorInduk}`);
     } catch (error) {
       // Error will be displayed in the form area
@@ -41,18 +41,18 @@ export function EditStudentPage() {
   if (isError || !data) {
     return (
       <div className="space-y-6">
-        <PageHeader title="Edit Mahasiswa" />
+        <PageHeader title="Edit Student" />
         <ErrorAlert
-          title="Gagal Memuat Data"
+          title="Failed to Load Data"
           message={
             error instanceof ApiError
               ? error.message
-              : 'Mahasiswa tidak ditemukan atau terjadi kesalahan'
+              : 'Student not found or an error occurred'
           }
         />
         <Button variant="outline" onClick={() => navigate('/')}>
           <span className="mr-2">←</span>
-          Kembali ke Daftar
+          Back to List
         </Button>
       </div>
     );
@@ -63,23 +63,23 @@ export function EditStudentPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <PageHeader
-        title="Edit Mahasiswa"
-        description={`Edit data mahasiswa ${student.namaLengkap}`}
+        title="Edit Student"
+        description={`Edit student data for ${student.namaLengkap}`}
         action={
           <Button variant="outline" onClick={() => navigate(`/students/${nomorInduk}`)}>
             <span className="mr-2">←</span>
-            Kembali
+            Back
           </Button>
         }
       />
       
       {updateMutation.isError && (
         <ErrorAlert
-          title="Gagal Memperbarui Mahasiswa"
+          title="Failed to Update Student"
           message={
             updateMutation.error instanceof ApiError
               ? updateMutation.error.message
-              : 'Terjadi kesalahan saat memperbarui mahasiswa'
+              : 'An error occurred while updating student'
           }
           errors={
             updateMutation.error instanceof ApiError

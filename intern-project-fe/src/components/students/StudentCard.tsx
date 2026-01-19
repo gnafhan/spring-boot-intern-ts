@@ -16,51 +16,51 @@ export function StudentCard({ student }: StudentCardProps) {
           <div>
             <CardTitle className="text-2xl">{student.namaLengkap}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">
-              Nomor Induk: {student.nomorInduk}
+              Student ID: {student.nomorInduk}
             </p>
           </div>
           <Badge variant="secondary" className="text-base px-3 py-1">
-            {student.usia} tahun
+            {student.usia} years
           </Badge>
         </div>
       </CardHeader>
       <CardContent>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <dt className="text-sm font-medium text-muted-foreground">Nama Depan</dt>
+            <dt className="text-sm font-medium text-muted-foreground">First Name</dt>
             <dd className="mt-1 text-sm">{student.namaDepan}</dd>
           </div>
           
           {student.namaBelakang && (
             <div>
-              <dt className="text-sm font-medium text-muted-foreground">Nama Belakang</dt>
+              <dt className="text-sm font-medium text-muted-foreground">Last Name</dt>
               <dd className="mt-1 text-sm">{student.namaBelakang}</dd>
             </div>
           )}
           
           <div>
-            <dt className="text-sm font-medium text-muted-foreground">Tanggal Lahir</dt>
+            <dt className="text-sm font-medium text-muted-foreground">Date of Birth</dt>
             <dd className="mt-1 text-sm">
-              {format(new Date(student.tanggalLahir), 'dd MMMM yyyy')}
+              {format(new Date(student.tanggalLahir), 'MMMM dd, yyyy')}
             </dd>
           </div>
           
           <div>
-            <dt className="text-sm font-medium text-muted-foreground">Usia</dt>
-            <dd className="mt-1 text-sm">{student.usia} tahun</dd>
+            <dt className="text-sm font-medium text-muted-foreground">Age</dt>
+            <dd className="mt-1 text-sm">{student.usia} years</dd>
           </div>
           
           <div>
-            <dt className="text-sm font-medium text-muted-foreground">Dibuat</dt>
+            <dt className="text-sm font-medium text-muted-foreground">Created</dt>
             <dd className="mt-1 text-sm">
-              {format(new Date(student.createdAt), 'dd MMM yyyy, HH:mm')}
+              {format(new Date(student.createdAt), 'MMM dd, yyyy, HH:mm')}
             </dd>
           </div>
           
           <div>
-            <dt className="text-sm font-medium text-muted-foreground">Terakhir Diubah</dt>
+            <dt className="text-sm font-medium text-muted-foreground">Last Updated</dt>
             <dd className="mt-1 text-sm">
-              {format(new Date(student.updatedAt), 'dd MMM yyyy, HH:mm')}
+              {format(new Date(student.updatedAt), 'MMM dd, yyyy, HH:mm')}
             </dd>
           </div>
         </dl>

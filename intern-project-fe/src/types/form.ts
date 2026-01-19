@@ -5,39 +5,39 @@ import { differenceInYears, parse, isValid } from 'date-fns';
 export const studentFormSchema = z.object({
   namaDepan: z
     .string()
-    .min(1, 'Nama depan tidak boleh kosong')
-    .min(2, 'Nama depan harus antara 2-100 karakter')
-    .max(100, 'Nama depan harus antara 2-100 karakter')
+    .min(1, 'First name is required')
+    .min(2, 'First name must be between 2-100 characters')
+    .max(100, 'First name must be between 2-100 characters')
     .regex(
       /^[a-zA-Z\s\-]+$/,
-      'Nama depan hanya boleh mengandung huruf, spasi, dan tanda hubung'
+      'First name can only contain letters, spaces, and hyphens'
     ),
   namaBelakang: z
     .string()
-    .max(100, 'Nama belakang maksimal 100 karakter')
+    .max(100, 'Last name maximum 100 characters')
     .regex(
       /^[a-zA-Z\s\-]*$/,
-      'Nama belakang hanya boleh mengandung huruf, spasi, dan tanda hubung'
+      'Last name can only contain letters, spaces, and hyphens'
     )
     .optional()
     .or(z.literal('')),
   tanggalLahir: z
     .string()
-    .min(1, 'Tanggal lahir tidak boleh kosong')
+    .min(1, 'Date of birth is required')
     .refine(
       (dateStr) => {
         if (!dateStr) return false;
         const date = parse(dateStr, 'yyyy-MM-dd', new Date());
         return isValid(date);
       },
-      { message: 'Format tanggal tidak valid' }
+      { message: 'Invalid date format' }
     )
     .refine(
       (dateStr) => {
         const date = parse(dateStr, 'yyyy-MM-dd', new Date());
         return date < new Date();
       },
-      { message: 'Tanggal lahir harus di masa lalu' }
+      { message: 'Date of birth must be in the past' }
     )
     .refine(
       (dateStr) => {
@@ -45,7 +45,7 @@ export const studentFormSchema = z.object({
         const age = differenceInYears(new Date(), date);
         return age >= 17;
       },
-      { message: 'Usia minimal 17 tahun' }
+      { message: 'Minimum age is 17 years' }
     )
     .refine(
       (dateStr) => {
@@ -53,7 +53,7 @@ export const studentFormSchema = z.object({
         const age = differenceInYears(new Date(), date);
         return age <= 40;
       },
-      { message: 'Usia maksimal 40 tahun' }
+      { message: 'Maximum age is 40 years' }
     ),
 });
 

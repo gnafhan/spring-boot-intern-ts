@@ -37,7 +37,7 @@ export function Pagination({
       <div className="text-sm text-muted-foreground">
         {totalItems !== undefined && (
           <span>
-            Total: <span className="font-medium">{totalItems}</span> mahasiswa
+            Total: <span className="font-medium">{totalItems}</span> students
           </span>
         )}
       </div>

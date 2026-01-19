@@ -36,7 +36,11 @@ public class DataSourceConfig {
         System.out.println("DataSource Configuration:");
         System.out.println("  JDBC URL: " + jdbcUrl);
         System.out.println("  Username: " + username);
-        System.out.println("  Password: " + password);
+        System.out.println("  Password: '" + password + "'");
+        System.out.println("  Password length: " + (password != null ? password.length() : 0));
+        System.out.println("  Password hex: " + toHex(password));
+        System.out.println("  Expected hex: " + toHex("internpass"));
+        System.out.println("  Password match: " + "internpass".equals(password));
         System.out.println("==============================================");
 
         // TEST 1: Raw JDBC without password
@@ -94,6 +98,15 @@ public class DataSourceConfig {
         config.setConnectionTimeout(30000);
         
         return new HikariDataSource(config);
+    }
+
+    private String toHex(String s) {
+        if (s == null) return "null";
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            sb.append(String.format("%02x ", (int) c));
+        }
+        return sb.toString().trim();
     }
 
     private String getConfigValue(String envName, String propertyName, String defaultValue) {

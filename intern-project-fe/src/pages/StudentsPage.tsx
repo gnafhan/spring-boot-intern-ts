@@ -145,8 +145,6 @@ export function StudentsPage() {
             onDelete={(nomorInduk, namaLengkap) =>
               setDeleteDialog({ open: true, nomorInduk, namaLengkap })
             }
-            sortField={sort.split(',')[0]}
-            sortDirection={sort.split(',')[1] as 'asc' | 'desc'}
             onSort={handleSort}
           />
           

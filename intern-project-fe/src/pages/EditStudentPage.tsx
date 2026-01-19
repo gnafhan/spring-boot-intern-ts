@@ -51,7 +51,7 @@ export function EditStudentPage() {
           }
         />
         <Button variant="outline" onClick={() => navigate('/')}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
+          <span className="mr-2">←</span>
           Kembali ke Daftar
         </Button>
       </div>

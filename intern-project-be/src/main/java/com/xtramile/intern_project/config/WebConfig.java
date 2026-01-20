@@ -14,7 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:5173", 
                     "http://localhost:6173", 
                     "http://localhost:3000",
-                    "https://student-management.nafhan.com"
+                    "https://student-management.nafhan.com",
+                    "https://api-student.nafhan.com"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

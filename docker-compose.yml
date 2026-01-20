@@ -72,7 +72,7 @@ services:
       - "traefik.http.routers.student-backend.middlewares=student-backend-cors"
       - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowMethods=GET,POST,PUT,DELETE,OPTIONS"
       - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowHeaders=Content-Type,Authorization,X-Requested-With,Accept,Origin"
-      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowOriginList=https://student-management.nafhan.com"
+      - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowOriginList=https://student-management.nafhan.com,https://api-student.nafhan.com"
       - "traefik.http.middlewares.student-backend-cors.headers.accessControlMaxAge=100"
       - "traefik.http.middlewares.student-backend-cors.headers.addVaryHeader=true"
       - "traefik.http.middlewares.student-backend-cors.headers.accessControlAllowCredentials=true"

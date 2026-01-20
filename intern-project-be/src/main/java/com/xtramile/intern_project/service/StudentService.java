@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.Year;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -120,23 +123,70 @@ public class StudentService {
     /**
      * Generate nomor induk with format: YYYY{sequence}
      * Example: 2026001, 2026002, etc.
+     * Reuses deleted nomor induk if available (finds gaps in sequence)
      */
     private String generateNomorInduk() {
         int currentYear = Year.now().getValue();
         String yearPrefix = String.valueOf(currentYear);
         
-        // Count existing students for this year
-        Long count = studentRepository.countByNomorIndukStartingWith(yearPrefix);
+        // Get all existing nomor induk for this year
+        List<String> existingNomorInduk = studentRepository.findAllNomorIndukByPrefix(yearPrefix);
         
-        // Generate sequence number (3 digits)
-        long sequence = (count != null ? count : 0) + 1;
-        String sequenceStr = String.format("%03d", sequence);
+        // Extract sequence numbers (last 3 digits)
+        Set<Integer> usedSequences = existingNomorInduk.stream()
+            .map(ni -> {
+                if (ni.startsWith(yearPrefix) && ni.length() == yearPrefix.length() + 3) {
+                    try {
+                        return Integer.parseInt(ni.substring(yearPrefix.length()));
+                    } catch (NumberFormatException e) {
+                        return null;
+                    }
+                }
+                return null;
+            })
+            .filter(seq -> seq != null && seq >= 1 && seq <= 999)
+            .collect(Collectors.toSet());
         
+        // Find first available sequence (1-999)
+        int nextSequence = -1;
+        for (int seq = 1; seq <= 999; seq++) {
+            if (!usedSequences.contains(seq)) {
+                nextSequence = seq;
+                break;
+            }
+        }
+        
+        // If no gap found, use next sequence after max
+        if (nextSequence == -1) {
+            if (usedSequences.isEmpty()) {
+                nextSequence = 1;
+            } else {
+                int maxSequence = usedSequences.stream().mapToInt(Integer::intValue).max().orElse(0);
+                nextSequence = maxSequence + 1;
+                if (nextSequence > 999) {
+                    throw new InvalidStudentDataException(
+                        "Maximum number of students for year " + currentYear + " has been reached (999)");
+                }
+            }
+        }
+        
+        String sequenceStr = String.format("%03d", nextSequence);
         String nomorInduk = yearPrefix + sequenceStr;
         
         // Double check for uniqueness (in case of race condition)
         if (studentRepository.existsByNomorInduk(nomorInduk)) {
-            throw new DuplicateStudentException(nomorInduk);
+            // Retry with next sequence
+            nextSequence++;
+            if (nextSequence > 999) {
+                throw new InvalidStudentDataException(
+                    "Maximum number of students for year " + currentYear + " has been reached (999)");
+            }
+            sequenceStr = String.format("%03d", nextSequence);
+            nomorInduk = yearPrefix + sequenceStr;
+            
+            if (studentRepository.existsByNomorInduk(nomorInduk)) {
+                throw new DuplicateStudentException(nomorInduk);
+            }
         }
         
         return nomorInduk;

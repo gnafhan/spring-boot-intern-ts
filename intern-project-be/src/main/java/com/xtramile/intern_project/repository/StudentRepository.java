@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,6 +37,13 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * Used for sequence generation
      */
     Long countByNomorIndukStartingWith(String prefix);
+    
+    /**
+     * Get all nomor induk starting with given prefix, ordered by nomor induk
+     * Used to find gaps in sequence for reuse
+     */
+    @Query("SELECT s.nomorInduk FROM Student s WHERE s.nomorInduk LIKE :prefix% ORDER BY s.nomorInduk")
+    List<String> findAllNomorIndukByPrefix(@Param("prefix") String prefix);
     
     /**
      * Find all students with pagination

@@ -2,7 +2,8 @@
 
 A full-stack student management application with Spring Boot REST API backend and React TypeScript frontend.
 
-**Live Demo:** https://student-management.nafhan.com
+**Live Demo:** https://student-management.nafhan.com  
+**API Documentation:** https://api-student.nafhan.com/swagger-ui/index.html
 
 ## Features
 
@@ -66,6 +67,10 @@ npm run dev
 ```
 
 ## API Documentation
+
+**Interactive API Docs (Swagger UI):**
+- Production: https://api-student.nafhan.com/swagger-ui/index.html
+- Local: http://localhost:8712/swagger-ui/index.html
 
 ### Endpoints
 
